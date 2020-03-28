@@ -7,7 +7,7 @@
 #                                                     #
 #            Práctica 2                               #
 #                                                     #
-#            Elaborador por:                          #    
+#            Elaborador por: Raúl Alarcón López       #    
 #                                                     #
 #######################################################
 #######################################################
@@ -37,12 +37,15 @@ class algCaminos:
         self.E  = tuple(self.E + [(o,d) for (d,o) in self.E])
         
         # Actualiza los pesos de los arcos según la distancia y el tipo de carretera
-        self.D ={} #...
-        
-        # Implementación
-
-                
-                
+        self.D ={}
+        # Sacamos el peso dependiendo del tipo de carretera
+        for item in self.E:
+            if item in mapa.carreteras:
+                self.D[item[0],item[1]] = (mapa.distancias[item] / 60) * 90
+                self.D[item[1],item[0]] = (mapa.distancias[item] / 60) * 90
+            elif item in mapa.autovias:
+                self.D[item[1],item[0]] = (mapa.distancias[item] / 60) * 120
+                self.D[item[0],item[1]] = (mapa.distancias[item] / 60) * 120
         
     # Esta función debe implementar el algoritmo de Dijkstra
     def dijkstra(self,origen,destino):
@@ -61,26 +64,45 @@ class algCaminos:
         aristasVisitadas = set([])
         camino = []
         tiempoViaje=0
-        
+
         # Inicialización
         S.add(origen)
         D[origen] = 0
         ultimo = origen
-        
         # Bucle principal
-        # while ultimo!=destino:  ...          
-            
-        
-        # Implementación
-        
-
+        while ultimo!= destino:
+            # Buscamos nodos candidatos
+            for item in edges:
+                tupleAux = edges[edges.index(item)]
+                # Si no está en Q lo añadimos
+                if tupleAux[0] == ultimo and tupleAux[1] not in Q:
+                    Q.add(tupleAux[1])
+                    D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
+                    aristasVisitadas.add(tupleAux)
+                # Si está cogemos el mínimo
+                elif tupleAux[0] == ultimo and tupleAux[1] in Q:
+                    D[tupleAux[1]] = min(D[ultimo]+distances[tupleAux],D[tupleAux[1]])
+                    aristasVisitadas.add(tupleAux)
+                else:
+                     continue
+            # Nos quedamos con el nodo más cercano
+            menor = 10000
+            nodo = ''
+            for item2 in Q:
+                if(D[item2] < menor):
+                    menor = D[item2]
+                    nodo = item2
+            S.add(nodo)
+            Q.remove(nodo)
+            camino.append((ultimo,nodo))
+            ultimo = nodo
         ##############################################
         # Salida ejemplo ¡¡BORRAR!!!
         self.tiempoViaje = 1.0
-        S = set(['Albacete','La Roda','Cuenca'])
-        Q = set(['Ruidera'])
-        aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
-        camino = [('Albacete','La Roda'),('La Roda','Cuenca')] # El camino debe ser un conjunto de tuplas
+        #S = set(['Albacete','La Roda','Cuenca'])
+        #Q = set(['Ruidera'])
+        #aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
+        #camino = [('Albacete','La Roda'),('La Roda','Cuenca')] # El camino debe ser un conjunto de tuplas
         ##############################################
         
         # Devuelve la salida.
