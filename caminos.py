@@ -65,10 +65,10 @@ class algCaminos:
         aristasVisitadas = set([])
         camino = []
         tiempoViaje=0
-        i = 0
-        for item in distances:
-            D[item[0]] = (float('inf'))
+
         # Inicialización
+        for item in self.N:
+            D[item] = (float('inf'))
         S.add(origen)
         D[origen] = 0
         ultimo = origen
@@ -77,12 +77,8 @@ class algCaminos:
             # Buscamos nodos candidatos
             for item in edges:
                 tupleAux = edges[edges.index(item)]
-                if tupleAux[0] == ultimo and tupleAux[1] == destino:
-                    Q.add(tupleAux[1])
-                    D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
-                    aristasVisitadas.add(tupleAux)
                 # Si no está en Q lo añadimos
-                elif tupleAux[0] == ultimo and tupleAux[1] not in Q:
+                if tupleAux[0] == ultimo and tupleAux[1] not in Q:
                     Q.add(tupleAux[1])
                     D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
                     aristasVisitadas.add(tupleAux)
@@ -90,7 +86,6 @@ class algCaminos:
                 elif tupleAux[0] == ultimo and tupleAux[1] in Q:
                     D[tupleAux[1]] = min(D[ultimo]+distances[tupleAux],D[tupleAux[1]])
                     aristasVisitadas.add(tupleAux)
-                     
             # Nos quedamos con el nodo más cercano
             menor = 1000
             nodo = ''
@@ -102,9 +97,8 @@ class algCaminos:
             S.add(nodo)
             Q.remove(nodo)
             camino.append((ultimo,nodo))
+            tiempoViaje += distances[(ultimo,nodo)]
             ultimo = nodo
-            print camino
-
         # Devuelve la salida.
         return (tiempoViaje/60, Q | S,  aristasVisitadas, camino)   
     
