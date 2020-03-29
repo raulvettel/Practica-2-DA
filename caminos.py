@@ -76,22 +76,24 @@ class algCaminos:
             for item in edges:
                 tupleAux = edges[edges.index(item)]
                 # Si no está en Q lo añadimos
-                if tupleAux[0] == ultimo and tupleAux[1] not in Q and tupleAux[1] not in S:
+                if tupleAux[0] == ultimo and tupleAux[1] not in Q :
                     Q.add(tupleAux[1])
                     D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
                     aristasVisitadas.add(tupleAux)
                 # Si está cogemos el mínimo
-                elif tupleAux[0] == ultimo and tupleAux[1] not in Q and tupleAux[1] not in S:
+                elif tupleAux[0] == ultimo and tupleAux[1] in Q :
                     D[tupleAux[1]] = min(D[ultimo]+distances[tupleAux],D[tupleAux[1]])
                     aristasVisitadas.add(tupleAux)
+                else:
+                     continue
             # Nos quedamos con el nodo más cercano
             menor = 10000
             nodo = ''
             for item2 in Q:
-                if D[item2] < menor:
+                if D[item2] < menor and ((item2,ultimo) in edges or (ultimo,item2) in edges):
                     menor = D[item2]
                     nodo = item2
-            #tiempoViaje += T[(ultimo,nodo)]
+            tiempoViaje += distances[(ultimo,nodo)]
             S.add(nodo)
             Q.remove(nodo)
             camino.append((ultimo,nodo))
@@ -99,7 +101,7 @@ class algCaminos:
             print camino
         ##############################################
         # Salida ejemplo ¡¡BORRAR!!!
-        self.tiempoViaje = 1.0
+        #self.tiempoViaje = 1.0
         #S = set(['Albacete','La Roda','Cuenca'])
         #Q = set(['Ruidera'])
         #aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
