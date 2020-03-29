@@ -66,6 +66,8 @@ class algCaminos:
         camino = []
         tiempoViaje=0
         i = 0
+        for item in distances:
+            D[item[0]] = (float('inf'))
         # Inicialización
         S.add(origen)
         D[origen] = 0
@@ -75,19 +77,22 @@ class algCaminos:
             # Buscamos nodos candidatos
             for item in edges:
                 tupleAux = edges[edges.index(item)]
+                if tupleAux[0] == ultimo and tupleAux[1] == destino:
+                    Q.add(tupleAux[1])
+                    D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
+                    aristasVisitadas.add(tupleAux)
                 # Si no está en Q lo añadimos
-                if tupleAux[0] == ultimo and tupleAux[1] not in Q :
+                elif tupleAux[0] == ultimo and tupleAux[1] not in Q:
                     Q.add(tupleAux[1])
                     D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
                     aristasVisitadas.add(tupleAux)
                 # Si está cogemos el mínimo
-                elif tupleAux[0] == ultimo and tupleAux[1] in Q :
+                elif tupleAux[0] == ultimo and tupleAux[1] in Q:
                     D[tupleAux[1]] = min(D[ultimo]+distances[tupleAux],D[tupleAux[1]])
                     aristasVisitadas.add(tupleAux)
-                else:
-                     continue
+                     
             # Nos quedamos con el nodo más cercano
-            menor = 10000
+            menor = 1000
             nodo = ''
             for item2 in Q:
                 if D[item2] < menor and ((item2,ultimo) in edges or (ultimo,item2) in edges):
@@ -99,15 +104,7 @@ class algCaminos:
             camino.append((ultimo,nodo))
             ultimo = nodo
             print camino
-        ##############################################
-        # Salida ejemplo ¡¡BORRAR!!!
-        #self.tiempoViaje = 1.0
-        #S = set(['Albacete','La Roda','Cuenca'])
-        #Q = set(['Ruidera'])
-        #aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
-        #camino = [('Albacete','La Roda'),('La Roda','Cuenca')] # El camino debe ser un conjunto de tuplas
-        ##############################################
-        
+
         # Devuelve la salida.
         return (tiempoViaje/60, Q | S,  aristasVisitadas, camino)   
     
