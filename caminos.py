@@ -41,12 +41,13 @@ class algCaminos:
         # Sacamos el peso dependiendo del tipo de carretera
         for item in self.E:
             if item in mapa.carreteras:
-                self.D[item[0],item[1]] = (mapa.distancias[item] / 60) * 90
-                self.D[item[1],item[0]] = (mapa.distancias[item] / 60) * 90
+                self.D[item[0],item[1]] = (mapa.distancias[item])
+                self.D[item[1],item[0]] = (mapa.distancias[item])
             elif item in mapa.autovias:
-                self.D[item[1],item[0]] = (mapa.distancias[item] / 60) * 120
-                self.D[item[0],item[1]] = (mapa.distancias[item] / 60) * 120
-        
+                self.D[item[1],item[0]] = (mapa.distancias[item])
+                self.D[item[0],item[1]] = (mapa.distancias[item])
+        #self.T = mapa.distancias
+
     # Esta función debe implementar el algoritmo de Dijkstra
     def dijkstra(self,origen,destino):
         # Se pueden cambiar los nombres de las funciones para 
@@ -64,7 +65,7 @@ class algCaminos:
         aristasVisitadas = set([])
         camino = []
         tiempoViaje=0
-
+        i = 0
         # Inicialización
         S.add(origen)
         D[origen] = 0
@@ -75,27 +76,27 @@ class algCaminos:
             for item in edges:
                 tupleAux = edges[edges.index(item)]
                 # Si no está en Q lo añadimos
-                if tupleAux[0] == ultimo and tupleAux[1] not in Q:
+                if tupleAux[0] == ultimo and tupleAux[1] not in Q and tupleAux[1] not in S:
                     Q.add(tupleAux[1])
                     D[tupleAux[1]] = D[ultimo]  + distances[tupleAux]
                     aristasVisitadas.add(tupleAux)
                 # Si está cogemos el mínimo
-                elif tupleAux[0] == ultimo and tupleAux[1] in Q:
+                elif tupleAux[0] == ultimo and tupleAux[1] not in Q and tupleAux[1] not in S:
                     D[tupleAux[1]] = min(D[ultimo]+distances[tupleAux],D[tupleAux[1]])
                     aristasVisitadas.add(tupleAux)
-                else:
-                     continue
             # Nos quedamos con el nodo más cercano
             menor = 10000
             nodo = ''
             for item2 in Q:
-                if(D[item2] < menor):
+                if D[item2] < menor:
                     menor = D[item2]
                     nodo = item2
+            #tiempoViaje += T[(ultimo,nodo)]
             S.add(nodo)
             Q.remove(nodo)
             camino.append((ultimo,nodo))
             ultimo = nodo
+            print camino
         ##############################################
         # Salida ejemplo ¡¡BORRAR!!!
         self.tiempoViaje = 1.0
@@ -106,7 +107,7 @@ class algCaminos:
         ##############################################
         
         # Devuelve la salida.
-        return (tiempoViaje, Q | S,  aristasVisitadas, camino)   
+        return (tiempoViaje/60, Q | S,  aristasVisitadas, camino)   
     
     
     # Esta función debe implementar el algoritmo de Dijkstra que introduzca información euclídea

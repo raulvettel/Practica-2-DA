@@ -29,20 +29,23 @@ class dicPrioridad:
     # Inserta un elemento
     def inserta(self,(elemento,valor)):
         # Lo añade al final
+        self.vector.append((elemento,valor))
         # Lo añade al diccionario
+        self.diccionario[elemento] = valor
         # Lo mueve hacia arriba
+        self.tamano += 1
         pass
     
     # Extrae el elemento mínimo del diccionario de prioridad
     def extrae_min(self):
         # Si el tamaño es 0, no devuelve nada
+        if self.tamano ==0:
+            return 
         # Cambia el mínimo por la última posición...
         self.cambia_elementos(0, self.tamano)
         # Actualiza el diccionario, decrementa el tamaño y
         # reorganiza la pila
-
-        # Implementación 
-         
+        
         # Retorna y borra el mínimo del vector, que estaba guardado en el último lugar,
         # en la posición self.tamano+1     
         return self.vector.pop()
@@ -153,15 +156,15 @@ class dicPrioridad:
 def test():
         L = [('A',6), ('B',4), ('C',3), ('D',5), ('E',9), ('F',7), ('G',7)]        
         dp = dicPrioridad(L)
-        print dp.extrae_min()
-        dp.inserta(('H', 1))
-        print dp['F']
-        dp.actualiza(('F',3))
-        print dp['F']
-        print 'F' in dp
-        del dp['F']
-        print 'F' in dp
-        print dp.extrae_min()
+        #print dp.extrae_min()
+        #dp.inserta(('H', 1))
+        #print dp['F']
+        #dp.actualiza(('F',3))
+        #print dp['F']
+        #print 'F' in dp
+        #del dp['F']
+        #print 'F' in dp
+        #print dp.extrae_min()
 
 
- #test()   
+test()   
