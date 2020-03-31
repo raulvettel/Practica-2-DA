@@ -14,7 +14,6 @@
 
 import math
 from diccionariopr import dicPrioridad 
-import random
 
 # Esta clase debe implementar los algoritmos para el cálculo de caminos.
 class algCaminos:
@@ -74,21 +73,47 @@ class algCaminos:
         D[origen] = 0
         ultimo = origen
         # Bucle principal
-        while ultimo!= destino:
+        while destino not in S:
+            # Recorremos cada (u,v)
             for (u,v) in edges:
-                if v not in Q:
-                    Q.add(v)
-                if (D[u] + distances(u,v)) < D[v]:
-                    D[v] = D[u] + d(u,v)
-                    P[v] = u
-            elegido = random.choice(Q)
+                if u == ultimo:
+                    # Si v no está entre los candidatos lo añadimos
+                    if v not in Q:
+                        Q.add(v)
+                    # Nos quedamos con la menor de las distancias
+                    if (D[u] + distances[(u,v)]) < D[v]:
+                        aristasVisitadas.add((u,v))
+                        D[v] = D[u] + distances[(u,v)]
+                        P[v] = u
+            # Extraemos el menor
+            elegido = ''
+            menor = (float('inf'))
             for item in Q:
-                if D[item] < D[elegido]:
+                if D[item] < menor and item not in S:
+                    menor = D[item]
                     elegido = item
-            print elegido
-            
+            ultimo = elegido
+            S.add(elegido)
+
+        destiny = destino
+        origin = P[destino]
+        # añadimos la ruta inicial
+        camino.append((origin,destiny))
+        #sumamos el tiempo de esa ruta
+        tiempoViaje += distances[(origin,destiny)]
+        # Recuperamos el camino
+        while True:
+            # Cuando estamos en origen rompemos ejecución.
+            if origin==origen:
+                break
+            else:
+                destiny = origin
+                origin = P[destiny]
+                # Se inserta al principio para cumplir con el formato pedido de salida
+                camino.insert(0,(origin,destiny))
+                tiempoViaje += distances[(origin,destiny)]
         # Devuelve la salida.
-        return (tiempoViaje/60, Q | S,  aristasVisitadas, camino)   
+        return (tiempoViaje, Q | S,  aristasVisitadas, camino)   
     
     
     # Esta función debe implementar el algoritmo de Dijkstra que introduzca información euclídea
