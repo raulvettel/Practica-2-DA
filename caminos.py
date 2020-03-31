@@ -131,25 +131,63 @@ class algCaminos:
         P = {} # Camino
         EU = {} # Distancia euclídea de cada nodo al destino
         
-        
+        print coordenadas
         # Estas estructuras almacenan los resultados
         aristasVisitadas = set([])
         camino = []
         tiempoViaje=0
+        # Inicialización
+        for item in self.N:
+            D[item] = (float('inf'))
+        S.add(origen)
+        D[origen] = 0
+        EU[destino] = 0
+        ultimo = origen
         
-        
-        # Implementación
-        
+        # Bucle principal
+        while destino not in S:
+            # Recorremos cada (u,v)
+            for (u,v) in edges:
+                if u == ultimo:
+                    # Si v no está entre los candidatos lo añadimos
+                    if v not in Q:
+                        Q.add(v)
+                    # Nos quedamos con la menor de las distancias a origen
+                    if (D[u] + distances[(u,v)]) < D[v]:
+                        aristasVisitadas.add((u,v))
+                        D[v] = D[u] + distances[(u,v)]
+                        P[v] = u
+                    # Calculamos la distancia euclidea del nodo a destino mediante la formula matematica
+                    if v not in EU:
+                        EU[v] = math.sqrt(((coordenadas[destino][0] - coordenadas[v][0])**2) + ((coordenadas[destino][1] - coordenadas[v][1])**2)) / 120
+            # Extraemos el menor
+            elegido = ''
+            menor = (float('inf'))
+            for item in Q:
+                if D[item] + EU[item] < menor and item not in S:
+                    menor = D[item]
+                    elegido = item
+            ultimo = elegido
+            S.add(elegido)
 
-        ##############################################
-        # Salida ejemplo ¡¡BORRAR!!!
-        self.tiempoViaje = 1.0
-        S = set(['Albacete','La Roda','Cuenca'])
-        Q = set(['Ruidera'])
-        aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
-        camino = [('Albacete','La Roda'),('La Roda','Cuenca')] # El camino debe ser un conjunto de tuplas
-        ##############################################
-        
+        destiny = destino
+        origin = P[destino]
+        # añadimos la ruta inicial
+        camino.append((origin,destiny))
+        #sumamos el tiempo de esa ruta
+        tiempoViaje += distances[(origin,destiny)]
+        # Recuperamos el camino
+        while True:
+            # Cuando estamos en origen rompemos ejecución.
+            if origin==origen:
+                break
+            else:
+                destiny = origin
+                origin = P[destiny]
+                # Se inserta al principio para cumplir con el formato pedido de salida
+                camino.insert(0,(origin,destiny))
+                tiempoViaje += distances[(origin,destiny)]
+
         # Devuelve la salida.
         return (tiempoViaje, Q | S,  aristasVisitadas, camino)           
     
