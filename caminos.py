@@ -131,7 +131,6 @@ class algCaminos:
         P = {} # Camino
         EU = {} # Distancia euclídea de cada nodo al destino
         
-        print coordenadas
         # Estas estructuras almacenan los resultados
         aristasVisitadas = set([])
         camino = []

@@ -34,7 +34,12 @@ class dicPrioridad:
         self.diccionario[elemento] = valor
         # Lo mueve hacia arriba
         self.tamano += 1
-        pass
+        # Ordenamos el vector por el valor
+        self.vector.sort(key=self.sortSecond)
+
+    # Metodo para devolver el segundo elemento del vector para ordenar
+    def sortSecond(self,(elemento,valor)):
+        return valor
     
     # Extrae el elemento mínimo del diccionario de prioridad
     def extrae_min(self):
@@ -45,24 +50,36 @@ class dicPrioridad:
         self.cambia_elementos(0, self.tamano)
         # Actualiza el diccionario, decrementa el tamaño y
         # reorganiza la pila
-        
+        self.diccionario.pop(self.vector[self.tamano][0])
+        self.tamano -=1
+        menor = self.vector.pop()
+        self.vector.sort(key=self.sortSecond)
         # Retorna y borra el mínimo del vector, que estaba guardado en el último lugar,
         # en la posición self.tamano+1     
-        return self.vector.pop()
+        return menor
 
     # Actualiza el valor de un elemento 
     def actualiza(self,(elemento,valor)):
-        # Se actualiza el elemento        
-        # Se saca la posición del padre
+        # Se elimina del vector y se vuelve a insertar con el nuevo valor
+        self.vector.remove((elemento,self.diccionario[elemento]))
+        self.vector.append((elemento,valor))
+        # Se actualiza el elemento
+        self.diccionario[elemento] = valor
         # Y se hace la reorganización correspondiente
-        pass
+        self.vector.sort(key=self.sortSecond)
             
     # Borra un elemento
     def borra(self,elemento):
         # Si el elemento no está en el diccionario, vuelve
-        # Se intercambia el elemento a borrar, y se 
-        # reorganiza la estructura de datos.
-        pass    
+        if self.diccionario.__contains__(elemento):
+            # Se intercambia el elemento a borrar, y se 
+            # reorganiza la estructura de datos.
+            valor = self.diccionario[elemento]
+            self.diccionario.pop(elemento)
+            self.vector.remove((elemento,valor))
+            self.tamano -= 1
+        else:
+            return    
         
     # Reordena el diccionario de prioridad hacia arriba a partir del elemento
     # almacenado en la posicion indice
@@ -131,8 +148,7 @@ class dicPrioridad:
     # Devuelve el valor de un elemento
     # Si dp es un diccionario de prioridad, se puede utilizar 'dp[elemento]'
     def __getitem__(self,elemento):
-        indice = self.diccionario[elemento]
-        return self.vector[indice][1]   
+        return self.diccionario[elemento]
     
     # Devuelve True si el diccionario contiene el elemento.
     # Si dp es un diccionario de prioridad, se puede usar 'elemento in dp'
@@ -156,15 +172,12 @@ class dicPrioridad:
 def test():
         L = [('A',6), ('B',4), ('C',3), ('D',5), ('E',9), ('F',7), ('G',7)]        
         dp = dicPrioridad(L)
-        #print dp.extrae_min()
-        #dp.inserta(('H', 1))
-        #print dp['F']
-        #dp.actualiza(('F',3))
-        #print dp['F']
-        #print 'F' in dp
-        #del dp['F']
-        #print 'F' in dp
-        #print dp.extrae_min()
-
-
-test()   
+        print dp.extrae_min()
+        dp.inserta(('H', 1))
+        print dp['F']
+        dp.actualiza(('F',3))
+        print dp['F']
+        print 'F' in dp
+        del dp['F']
+        print 'F' in dp
+        print dp.extrae_min()   
