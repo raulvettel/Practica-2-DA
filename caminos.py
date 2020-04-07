@@ -216,25 +216,35 @@ class algCaminos:
         S.add(origen)
         EU[destino] = 0
         DP[origen] = 0
-        ultimo = origen
-        
+        ultimoVisitado = origen
+        distanciaUltimo = 0
         # Bucle principal
-        while destino not in S:
-            # Recorremos cada (u,v)
-            for (u,v) in edges:
-                if u == ultimo:
-                    # Si v no está entre los candidatos lo añadimos
-                    if v not in Q:
-                        Q.add(v)
-                    # Nos quedamos con la menor de las distancias a origen
-                    if DP[u] + distances[(u,v)] < DP[v]:
-                        aristasVisitadas.add((u,v))
-                        # Incluimos distancia euclidea a destino
-                        DP[v] = DP[u] + distances[(u,v)] + (math.sqrt(((coordenadas[destino][0] - coordenadas[v][0])**2) + ((coordenadas[destino][1] - coordenadas[v][1])**2)) / 120)
-                        P[v] = u
-            # Extraemos el menor
-            ultimo = DP.extrae_min()[0]
-            S.add(ultimo)
+        while ultimoVisitado!=destino:
+        ###############################################################
+        # Completar código
+        ###############################################################
+            for (alcanzado,peso) in edges:
+                if alcanzado in S:
+                    continue
+            
+                d_alcanzado = distanciaUltimo + peso
+            
+                if alcanzado not in Q:
+                    Q.add(alcanzado)
+                    DP.__setitem__(alcanzado,d_alcanzado)
+                    P[alcanzado] = ultimoVisitado
+                else:
+                    if DP.__getitem__(alcanzado) > d_alcanzado:
+                        DP.__setitem__(alcanzado,d_alcanzado)
+                        P[alcanzado] = ultimoVisitado
+        
+            if len(Q)==0:
+                print 'El nodo ',destino, ' no es alcanzable desde ', origen
+                return None
+
+            (ultimoVisitado, distanciaUltimo) = DP.extrae_min()
+            Q.remove(ultimoVisitado)
+            S.add(ultimoVisitado)
         destiny = destino
         origin = P[destino]
         # añadimos la ruta inicial
