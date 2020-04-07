@@ -50,7 +50,7 @@ class dicPrioridad:
         self.cambia_elementos(0, self.tamano)
         # Actualiza el diccionario, decrementa el tamaño y
         # reorganiza la pila
-        self.diccionario.pop(self.vector[self.tamano][0])
+        #self.diccionario.pop(self.vector[self.tamano][0])
         self.tamano -=1
         menor = self.vector.pop()
         self.vector.sort(key=self.sortSecond)
@@ -106,8 +106,8 @@ class dicPrioridad:
     # Intercambia dos elementos (han de ser padre e hijo)
     def cambia_elementos(self, nodo1, nodo2):
         # Cambia los valores en el diccionario. 
-        self.diccionario[self.vector[nodo1][0]] = nodo2
-        self.diccionario[self.vector[nodo2][0]] = nodo1
+        #self.diccionario[self.vector[nodo1][0]] = nodo2
+        #self.diccionario[self.vector[nodo2][0]] = nodo1
         # Cambia los valores en el vector
         self.vector[nodo2],self.vector[nodo1] = self.vector[nodo1],self.vector[nodo2]        
        
@@ -158,7 +158,7 @@ class dicPrioridad:
     # Esta función permite actualizar directamente el valor de un elemento
     # Si dp es un diccionario de prioridad, se puede hacer 'dp[elemento]=valor'
     def __setitem__(self, elemento, valor):
-        if elemento in self.diccionario:
+        if ((elemento,valor)) in self.vector:
             self.actualiza((elemento, valor))  
         else:
             self.inserta((elemento, valor))
@@ -180,4 +180,7 @@ def test():
         print 'F' in dp
         del dp['F']
         print 'F' in dp
-        print dp.extrae_min()   
+        print dp.extrae_min() 
+        print dp.vector
+        print dp.diccionario  
+#test()
