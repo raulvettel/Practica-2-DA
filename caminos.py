@@ -131,7 +131,6 @@ class algCaminos:
         P = {} # Camino
         EU = {} # Distancia euclídea de cada nodo al destino
         
-        print coordenadas
         # Estas estructuras almacenan los resultados
         aristasVisitadas = set([])
         camino = []
@@ -206,23 +205,54 @@ class algCaminos:
         P = {} # Camino
         EU = {} # Distancia euclídea de cada nodo al destino
         
-        
         # Estas estructuras almacenan los resultados
         aristasVisitadas = set([])
         camino = []
         tiempoViaje=0
         
-        # Implementación
-        
-
-        ##############################################
-        # Salida ejemplo ¡¡BORRAR!!!
-        self.tiempoViaje = 1.0
-        S = set(['Albacete','La Roda','Cuenca'])
-        Q = set(['Ruidera'])
-        aristasVisitadas = [('Albacete','La Roda'),('La Roda','Cuenca'),('Albacete','Ruidera')] 
-        camino = [('Albacete','La Roda'),('La Roda','Cuenca')] # El camino debe ser un conjunto de tuplas
-        ##############################################
+        # Inicialización
+        for item in self.N:
+            DP[item] = float('inf')
+        S.add(origen)
+        EU[destino] = 0
+        DP[origen] = 0
+        (ultimo,distancia) = DP.extrae_min()
+        # Bucle principal
+        while destino not in S:
+            # Recorremos cada (u,v)
+            for (u,v) in edges:
+                if v in S:
+                    continue
+                if u == ultimo:
+                    # Si v no está entre los candidatos lo añadimos
+                    if v not in Q:
+                        Q.add(v)
+                    # Nos quedamos con la menor de las distancias a origen
+                    if distancia + distances[(u,v)] < DP[v]:
+                        aristasVisitadas.add((u,v))
+                        # Incluimos distancia euclidea a destino
+                        DP[v] = distancia + distances[(u,v)] + (math.sqrt(((coordenadas[destino][0] - coordenadas[v][0])**2) + ((coordenadas[destino][1] - coordenadas[v][1])**2)) / 120)
+                        P[v] = u
+            # Extraemos el menor
+            (ultimo,distancia) = DP.extrae_min()
+            S.add(ultimo)
+        destiny = destino
+        origin = P[destino]
+        # añadimos la ruta inicial
+        camino.append((origin,destiny))
+        #sumamos el tiempo de esa ruta
+        tiempoViaje += distances[(origin,destiny)]
+        # Recuperamos el camino
+        while True:
+            # Cuando estamos en origen rompemos ejecución.
+            if origin==origen:
+                break
+            else:
+                destiny = origin
+                origin = P[destiny]
+                # Se inserta al principio para cumplir con el formato pedido de salida
+                camino.insert(0,(origin,destiny))
+                tiempoViaje += distances[(origin,destiny)]
         
         # Devuelve la salida.
         return (tiempoViaje, Q | S,  aristasVisitadas, camino)   
