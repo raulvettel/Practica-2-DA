@@ -55,7 +55,7 @@ class dicPrioridad:
     # Actualiza el valor de un elemento 
     def actualiza(self,(elemento,valor)):
         # Se actualiza el elemento
-        position = self.diccionario[elemento] + 1
+        position = self.diccionario[elemento]
         self.vector[position] = (elemento,valor)        
         # Se saca la posición del padre
         parentPosition = self.nodopadre(position)
@@ -94,10 +94,9 @@ class dicPrioridad:
         # recursiva con el padre.     
         else:
             parentPosition = self.nodopadre(indice)
-            if self.vector[parentPosition][1] >= self.vector[indice][1]:
-                self.cambia_elementos(parentPosition,indice)
-                self.up_heapify(parentPosition) 
-  
+            if(self.vector[indice][1] <= self.vector[parentPosition][1]):
+                self.cambia_elementos(parentPosition, indice)
+                self.up_heapify(parentPosition)
     
     # Reordena el diccionario de prioridad hacia abajo a partir del elemento
     # almacenado en la posicion indice
@@ -116,7 +115,7 @@ class dicPrioridad:
         # si tenemos dos, nos quedamos con el menor
         elif self.vector[hijoIz][1] > self.vector[hijoDe][1]:
             hijo = hijoDe
-        elif self.vector[hijoIz][1] < self.vector[hijoDe][1]:
+        else:
             hijo = hijoIz
         # si el hijo es menor que el elemento
         if self.vector[indice][1] > self.vector[hijo][1]:
